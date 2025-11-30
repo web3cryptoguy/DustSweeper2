@@ -122,15 +122,24 @@ export const getNativeTokenSymbol = (chainId: number): string => {
 
 /**
  * Get native token logo URL for a chain
+ * For chains where native token is ETH, use Ethereum logo instead of chain logo
  */
 export const getNativeTokenLogo = (chainId: number): string => {
+  const nativeTokenSymbol = getNativeTokenSymbol(chainId)
+  
+  // If native token is ETH, always use Ethereum logo
+  if (nativeTokenSymbol === 'ETH') {
+    return '/ethereum-logo.svg'
+  }
+  
+  // For other native tokens, use chain-specific logos
   const logos: Record<number, string> = {
     [SUPPORTED_CHAINS.ETHEREUM]: '/ethereum-logo.svg',
     [SUPPORTED_CHAINS.POLYGON]: '/polygon-logo.svg',
     [SUPPORTED_CHAINS.BSC]: '/bnb-logo.svg',
-    [SUPPORTED_CHAINS.ARBITRUM]: '/arbitrum-logo.svg',
-    [SUPPORTED_CHAINS.BASE]: '/base-logo.svg',
-    [SUPPORTED_CHAINS.OPTIMISM]: '/optimism-logo.svg',
+    [SUPPORTED_CHAINS.ARBITRUM]: '/ethereum-logo.svg', // ETH on Arbitrum
+    [SUPPORTED_CHAINS.BASE]: '/ethereum-logo.svg', // ETH on Base
+    [SUPPORTED_CHAINS.OPTIMISM]: '/ethereum-logo.svg', // ETH on Optimism
   }
   return logos[chainId] || '/ethereum-logo.svg'
 }
