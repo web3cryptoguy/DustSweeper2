@@ -1,0 +1,19 @@
+[build]
+  command = "bun run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "18"
+  BUN_VERSION = "latest"
+
+# Next.js 需要这些环境变量在构建时可用
+# 注意：NEXT_PUBLIC_* 变量会在构建时被打包到客户端代码中
+[build.environment]
+  NEXT_PUBLIC_MORALIS_PRIMARY_API_KEY = "$NEXT_PUBLIC_MORALIS_PRIMARY_API_KEY"
+  NEXT_PUBLIC_MORALIS_FALLBACK_API_KEY = "$NEXT_PUBLIC_MORALIS_FALLBACK_API_KEY"
+  NEXT_PUBLIC_INFURA_API_KEY = "$NEXT_PUBLIC_INFURA_API_KEY"
+  NEXT_PUBLIC_ALCHEMY_API_KEY = "$NEXT_PUBLIC_ALCHEMY_API_KEY"
+
