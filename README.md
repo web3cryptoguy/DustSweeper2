@@ -1,6 +1,6 @@
-# Token Sweeper 🧹
+# DustSweeper 🧹
 
-Token Sweeper 是一个 DeFi 应用程序，使用户能够通过 EIP-7702 批量交易高效地将多个小额 ERC-20 代币余额**清扫**到单个首选代币中。在 Base 和 Optimism 主网上体验单次签名的原子交换。
+DustSweeper 是一个 DeFi 应用程序，使用户能够通过 EIP-7702 批量交易高效地将多个小额 ERC-20 代币余额**清扫**到单个首选代币中。在 Base 和 Optimism 主网上体验单次签名的原子交换。
 
 ## 🚀 核心功能
 
