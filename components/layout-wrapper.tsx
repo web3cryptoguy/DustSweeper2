@@ -19,7 +19,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   return (
     <>
       {isConnected && <Navbar envStatus={envStatus} />}
-      <div className={isConnected ? "pt-16 sm:pt-20" : ""}>
+      <div className={isConnected ? "pt-24 sm:pt-20" : ""}>
         {children}
       </div>
     </>
