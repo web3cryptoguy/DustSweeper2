@@ -183,13 +183,9 @@ MORALIS_PRIMARY_API_KEY=your-moralis-primary-api-key
 MORALIS_FALLBACK_API_KEY=your-moralis-fallback-api-key  # 可选，用于备用
 MORALIS_BASE_URL=https://deep-index.moralis.io/api/v2.2  # 可选，默认值
 
-# RPC URLs (可选，如果使用自定义 RPC)
-NEXT_PUBLIC_BASE_RPC_URL=your-base-rpc-url
-NEXT_PUBLIC_OPTIMISM_RPC_URL=your-optimism-rpc-url
+# INFURA 配置(可选，如果使用自定义 RPC)
+NEXT_PUBLIC_INFURA_API_KEY==your-base-rpc-url
 
-# Swap API 配置 (可选，用于交换功能)
-AERODROME_BASE_API=aerodrome-api-endpoint
-VELODROME_OPTIMISM_API=velodrome-api-endpoint
 ```
 
 4. **启动开发服务器**
