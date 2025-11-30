@@ -7,7 +7,7 @@ import { Web3Provider } from "@/components/providers"
 import LayoutWrapper from "@/components/layout-wrapper"
 
 export const metadata: Metadata = {
-  title: "Token Sweeper - Clean Up Your Wallet Dust",
+  title: "DustSweeper - Clean Up Your Wallet Dust",
   description: "Swap multiple small token balances into one preferred token with a single transaction",
   generator: "v0.dev",
   icons: {

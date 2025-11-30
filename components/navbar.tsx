@@ -74,8 +74,13 @@ export default function Navbar({ envStatus }: NavbarProps) {
       <div className="container mx-auto px-4 py-3 sm:py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-blue-600" />
-            <span className="font-bold text-xl">Token Sweeper</span>
+            <Image
+              src="/DustSweeper-logo.png"
+              alt="DustSweeper"
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-end">
