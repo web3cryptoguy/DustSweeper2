@@ -1,0 +1,25 @@
+# Bun 配置文件
+# 用于优化 Bun 运行时的性能和行为
+
+[install]
+# 使用 Bun 的原生包管理器
+auto = true
+
+# 生产环境配置
+[install.production]
+# 不安装 devDependencies
+dev = false
+
+# 开发环境配置
+[install.development]
+# 安装 devDependencies
+dev = true
+
+# 运行时配置
+[run]
+# 使用 Bun 的原生运行时
+bun = true
+
+# 预加载配置（可选，用于优化性能）
+# preload = ["./preload.ts"]
+
