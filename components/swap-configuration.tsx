@@ -258,7 +258,7 @@ export default function SwapConfiguration({
       </div>
 
       <div className="grid lg:grid-cols-5 gap-4 sm:gap-6">
-        <div className="lg:col-span-3 order-2 lg:order-1">
+        <div className="lg:col-span-3 order-1 lg:order-1">
           <Card>
             <CardHeader className="pb-3 sm:pb-6">
               <CardTitle className="text-base sm:text-lg text-blue-800">Swap Details</CardTitle>
@@ -354,7 +354,7 @@ export default function SwapConfiguration({
           </div>
         </div>
 
-        <div className="lg:col-span-2 space-y-4 sm:space-y-6 order-1 lg:order-2">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6 order-2 lg:order-2">
           <Card>
             <CardHeader className="pb-3 sm:pb-6">
               <CardTitle className="text-base sm:text-lg text-blue-800">Summary</CardTitle>
