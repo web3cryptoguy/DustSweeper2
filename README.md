@@ -82,13 +82,10 @@ token-sweeper/
 ### Web3 集成
 - **Wagmi**: 以太坊的 React Hooks
 - **Viem**: 以太坊的 TypeScript 接口
-- **RainbowKit**: 钱包连接
 - **EIP-7702**: 原子批量交易支持
 
 ### API 和数据源
 - **[Moralis API](https://moralis.io/)**: 代币余额获取和价格数据
-- **[Aerodrome Swap API](https://marketplace.quicknode.com/add-on/aerodrome-swap-api)**: Base 链上领先 DEX Aerodrome 的报价和交换
-- **[Velodrome Swap API](https://marketplace.quicknode.com/add-on/velodrome-swap-api)**: Optimism 链上领先 DEX Velodrome 的报价和交换
 
 ### 状态管理
 - **React Hooks**: 组件级状态
@@ -104,7 +101,6 @@ token-sweeper/
 - **Node.js 20+** 或 **Bun 1.0+** (推荐使用 Bun 以获得更好的性能)
 - 一个带有 API 密钥的 [Moralis](https://moralis.io/) 账户
 - 一个带有 Base 或 Optimism 端点的 [QuickNode](http://dashboard.quicknode.com/) 账户 (可选，用于 Swap API)
-- [Aerodrome](https://marketplace.quicknode.com/add-on/aerodrome-swap-api) 或 [Velodrome Swap API](https://marketplace.quicknode.com/add-on/velodrome-swap-api) 插件 (_提供免费套餐_)
 - 安装 [MetaMask](https://metamask.io/) 浏览器扩展，支持 EIP-7702
 
 #### 设置 Moralis
@@ -121,16 +117,10 @@ token-sweeper/
 
 #### 设置 QuickNode (可选，用于 Swap API)
 
-1. **创建端点**: 登录您的 [QuickNode 账户](http://dashboard.quicknode.com/)，为您要支持的每条链创建新端点。在本指南中，我们将使用 Base 和 Optimism。
+**创建端点**: 登录您的 [QuickNode 账户](http://dashboard.quicknode.com/)，为您要支持的每条链创建新端点。在本指南中，我们将使用 Base 和 Optimism。
 
 > 由于这些 API 插件仅在主网上可用，您需要使用主网端点设置您的 QuickNode 账户。
 
-2. **安装插件**:
-
-- 进入端点仪表板后，导航到端点的 **插件** 部分。
-- 安装 [Aerodrome Swap API](https://marketplace.quicknode.com/add-on/aerodrome-swap-api) 和 [Velodrome Swap API](https://marketplace.quicknode.com/add-on/velodrome-swap-api) 插件。您可以使用免费套餐开始使用交换 API。
-
-3. **获取 Swap API URL**: 点击 Aerodrome 或 Velodrome Swap API 插件旁边的 **Getting Started**。这将显示您需要在应用程序中使用的基础 API URL。使用 `/v1/...` 之前的部分，因为我们将在代码中附加特定端点。它应该类似于：`https://YOUR-QUICKNODE-ENDPOINT-URL/addon/YOUR-ADDON-ID`
 
 #### 安装 MetaMask
 
@@ -231,10 +221,3 @@ http://localhost:3000
 4. **查看交换报价**: 应用程序将计算并显示您所选代币的最佳交换报价。
 5. **执行交换**: 确认交易以将您的代币清扫到首选代币中。如果您有智能账户，它将作为单个批量交易执行；否则，它将按顺序处理。
 6. **分享您的成就**: 交换后，您可以生成社交成就卡片，在社交媒体上分享您的成功。
-
-## 🌐 支持的网络
-
-| 网络 | 链 ID | DEX 集成 | 状态 |
-|---------|----------|-----------------|---------|
-| Base 主网 | 8453 | Aerodrome | ✅ 活跃 |
-| Optimism 主网 | 10 | Velodrome | ✅ 活跃 |

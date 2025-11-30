@@ -71,7 +71,7 @@ export default function Navbar({ envStatus }: NavbarProps) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-orange-100 border-b border-orange-200">
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-3 sm:py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-blue-600" />
@@ -90,12 +90,12 @@ export default function Navbar({ envStatus }: NavbarProps) {
                   onClick={() => setShowNetworkMenu(!showNetworkMenu)}
                   variant="default"
                   size="sm"
-                  className="flex items-center gap-2 bg-black text-white hover:bg-gray-800"
+                  className="flex items-center gap-2 bg-black text-white hover:bg-gray-800 text-sm"
                 >
                   <img
                     src={getChainLogo(chainId)}
                     alt={getChainName(chainId as SupportedChainId)}
-                    className="w-4 h-4 rounded-full"
+                    className="w-4 h-4 sm:w-5 sm:h-5 rounded-full"
                   />
                   <span className="hidden sm:inline">{getChainName(chainId as SupportedChainId)}</span>
                   <ChevronDown className="w-4 h-4" />
@@ -179,14 +179,15 @@ export default function Navbar({ envStatus }: NavbarProps) {
                 onClick={() => connect({ connector: metaMask() })}
                 variant="default"
                 size="sm"
-                className="order-1 sm:order-none"
+                className="order-1 sm:order-none flex items-center gap-2 text-sm"
               >
                 <img
                   src="/MetaMask-icon-fox.svg"
                   alt="MetaMask"
-                  className="w-4 h-4 mr-2"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                 />
-                Connect Wallet
+                <span className="hidden sm:inline">Connect Wallet</span>
+                <span className="sm:hidden">Connect</span>
               </Button>
             )}
           </div>

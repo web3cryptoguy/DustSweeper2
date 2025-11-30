@@ -373,7 +373,7 @@ export default function TokenSweeperApp() {
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {swapStep === "select" && (
           <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            <div className="lg:col-span-2 order-2 lg:order-1">
+            <div className="lg:col-span-2 order-1 lg:order-1">
               <TokenPortfolio
                 tokens={tokens}
                 loading={loading}
@@ -387,7 +387,7 @@ export default function TokenSweeperApp() {
               />
             </div>
 
-            <div className="space-y-4 sm:space-y-6 order-1 lg:order-2">
+            <div className="space-y-4 sm:space-y-6 order-2 lg:order-2">
               <Card>
                 <CardHeader className="pb-3 sm:pb-6">
                   <CardTitle className="text-base sm:text-lg text-blue-800">Sweep Summary</CardTitle>
