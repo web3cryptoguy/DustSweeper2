@@ -77,9 +77,9 @@ export default function Navbar({ envStatus }: NavbarProps) {
             <Image
               src="/DustSweeper-logo.png"
               alt="DustSweeper"
-              width={24}
-              height={24}
-              className="w-6 h-6"
+              width={120}
+              height={120}
+              className="h-12 w-auto object-contain"
             />
           </div>
 
