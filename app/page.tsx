@@ -109,11 +109,8 @@ export default function TokenSweeperApp() {
     return () => window.removeEventListener('ethereum#initialized', checkMetaMask)
   }, [])
 
-  useEffect(() => {
-    if (isConnected && address) {
-      refetch()
-    }
-  }, [isConnected, address, chainId, refetch])
+  // Note: useTokenBalances hook automatically fetches tokens when address or chainId changes
+  // No need to manually call refetch here to avoid duplicate API calls
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -167,7 +164,7 @@ export default function TokenSweeperApp() {
   }
 
   const handleSelectAll = () => {
-    const selectableTokens = tokens.filter((token) => !token.native_token && !token.is_spam && token.quote > 0)
+    const selectableTokens = tokens.filter((token) => !token.native_token && !token.is_spam)
     setSelectedTokens(selectableTokens.map((token) => token.contract_address))
   }
 
@@ -369,7 +366,7 @@ export default function TokenSweeperApp() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {swapStep === "select" && (
           <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">

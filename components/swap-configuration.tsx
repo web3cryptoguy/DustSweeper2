@@ -309,7 +309,7 @@ export default function SwapConfiguration({
                 {/* Right side: Output token */}
                 <div className="flex-1 w-full sm:w-auto">
                   <div className="text-xs sm:text-sm font-medium text-yellow-700 mb-2">Receive Token</div>
-                  <div className="p-3 sm:p-4 border rounded-lg bg-gray-50">
+                  <div className="p-3 sm:p-4 border rounded-lg bg-gray-100">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <img
                         src={getTokenLogoFromAddress(outcomeToken, chainId)}
