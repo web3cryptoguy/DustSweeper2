@@ -63,7 +63,7 @@ const isInMetaMaskBrowser = (): boolean => {
   return !!(window as any).ethereum?.isMetaMask
 }
 
-export default function TokenSweeperApp() {
+export default function DustSweeperApp() {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
   const { data: capabilities } = useCapabilities({ account: address })
@@ -213,11 +213,12 @@ export default function TokenSweeperApp() {
         <div className="container mx-auto px-4 py-16">
           <div className="text-center max-w-4xl mx-auto">
             <div className="mb-8">
-              <div className="inline-flex items-center gap-2 bg-orange-600 rounded-full px-6 py-3 shadow-lg mb-6">
-                <Sparkles className="w-6 h-6 text-white" />
-                <span className="font-bold text-xl text-white">
-                  Token Sweeper
-                </span>
+              <div className="inline-flex items-center justify-center mb-6">
+                <img
+                  src="/DustSweeper-logo.png"
+                  alt="Dust Sweeper"
+                  className="h-12 sm:h-16 md:h-20"
+                />
               </div>
             </div>
 

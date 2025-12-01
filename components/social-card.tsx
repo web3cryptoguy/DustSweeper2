@@ -68,7 +68,7 @@ export default function SocialCard({ result }: SocialCardProps) {
         const url = URL.createObjectURL(imageBlob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `token-sweeper-${
+        link.download = `dustsweeper-${
           result.tokensSwapped
         }-tokens-${Date.now()}.png`;
         document.body.appendChild(link);
@@ -90,7 +90,7 @@ export default function SocialCard({ result }: SocialCardProps) {
 
     const tweetText = `Just cleaned up ${
       result.tokensSwapped
-    } dust tokens from my wallet ${atomicText} with @TokenSweeperApp! ✨ #DeFi #${
+    } dust tokens from my wallet ${atomicText} with @DustSweeperApp! ✨ #DeFi #${
       result.chain
     }${result.isAtomic ? " #EIP7702" : ""}`;
 
@@ -111,9 +111,12 @@ export default function SocialCard({ result }: SocialCardProps) {
           <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 sm:h-24 bg-white/10 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
 
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 flex-shrink-0" />
-              <span className="font-bold text-sm sm:text-base md:text-lg">Token Sweeper</span>
+            <div className="flex items-center justify-center mb-4 sm:mb-6">
+              <img
+                src="/DustSweeper-logo.png"
+                alt="Dust Sweeper"
+                className="h-8 sm:h-10 md:h-12"
+              />
             </div>
 
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">Wallet Dust Cleared!</h2>
@@ -161,7 +164,7 @@ export default function SocialCard({ result }: SocialCardProps) {
             </div>
 
             <div className="text-center text-xs sm:text-sm text-blue-100">
-              Powered by TokenSweeper
+              Powered by DustSweeper
             </div>
           </div>
         </CardContent>

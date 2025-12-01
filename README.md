@@ -27,7 +27,7 @@ DustSweeper 是一个 DeFi 应用程序，使用户能够通过 EIP-7702 批量�
 ### 📁 项目结构
 
 ```
-token-sweeper/
+dustsweeper/
 ├── app/                          # Next.js App Router
 │   ├── api/                      # API 路由
 │   │   ├── moralis/              # Moralis API 集成
@@ -134,7 +134,7 @@ token-sweeper/
 
 ```bash
 git clone https://github.com/quiknode-labs/qn-guide-examples.git
-cd qn-guide-examples/sample-dapps/token-sweeper-eip-7702
+cd qn-guide-examples/sample-dapps/dustsweeper-eip-7702
 ```
 
 2. **安装依赖**

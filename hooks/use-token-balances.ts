@@ -150,6 +150,11 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
         throw new Error(`Unsupported chain: ${chainId}`)
       }
 
+      // Check if API keys are configured
+      if (!PRIMARY_API_KEY && !FALLBACK_API_KEY) {
+        throw new Error('Moralis API keys are not configured. Please set NEXT_PUBLIC_MORALIS_PRIMARY_API_KEY or NEXT_PUBLIC_MORALIS_FALLBACK_API_KEY in your environment variables.')
+      }
+
       // Directly call Moralis API to fetch token balances
       const url = `${MORALIS_BASE_URL}/${address}/erc20?chain=${chainName}&limit=100&exclude_spam=true&exclude_unverified_contracts=true`
       
@@ -158,6 +163,10 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       let currentApiKey: string
       
       try {
+        if (!PRIMARY_API_KEY) {
+          throw new Error('Primary API key not configured')
+        }
+
         const options = {
           method: 'GET',
           headers: {
@@ -176,6 +185,10 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       } catch (error) {
         // Try fallback API key
         try {
+          if (!FALLBACK_API_KEY) {
+            throw new Error('Fallback API key not configured')
+          }
+
           const fallbackOptions = {
             method: 'GET',
             headers: {
@@ -198,8 +211,17 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
           
           currentApiKey = FALLBACK_API_KEY
         } catch (fallbackError) {
-          console.error('All API keys failed')
-          throw fallbackError
+          const errorMessage = fallbackError instanceof Error ? fallbackError.message : 'Unknown error'
+          if (errorMessage.includes('not configured') || errorMessage.includes('API key')) {
+            console.error('All API keys failed - configuration issue')
+            throw new Error('Moralis API keys are not configured. Please set NEXT_PUBLIC_MORALIS_PRIMARY_API_KEY or NEXT_PUBLIC_MORALIS_FALLBACK_API_KEY in your .env.local file.')
+          } else if (errorMessage.includes('ERR_CONNECTION_CLOSED') || errorMessage.includes('Failed to fetch')) {
+            console.error('All API keys failed - network error')
+            throw new Error('Network connection failed. Please check your internet connection and try again.')
+          } else {
+            console.error('All API keys failed')
+            throw fallbackError
+          }
         }
       }
 
@@ -463,12 +485,14 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       
       // Provide user-friendly error messages
       let userFriendlyError = 'Failed to fetch ERC20 token information. Please check your connection.'
-      if (errorMessage.includes('API')) {
+      if (errorMessage.includes('not configured') || errorMessage.includes('API key')) {
+        userFriendlyError = 'Moralis API keys are not configured. Please set NEXT_PUBLIC_MORALIS_PRIMARY_API_KEY or NEXT_PUBLIC_MORALIS_FALLBACK_API_KEY in your .env.local file.'
+      } else if (errorMessage.includes('API')) {
         userFriendlyError = `API request failed: ${errorMessage}`
-      } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
-        userFriendlyError = 'Network connection failed. Please check your network settings.'
+      } else if (errorMessage.includes('network') || errorMessage.includes('fetch') || errorMessage.includes('ERR_CONNECTION_CLOSED')) {
+        userFriendlyError = 'Network connection failed. Please check your internet connection and network settings.'
       } else if (errorMessage.includes('401') || errorMessage.includes('403')) {
-        userFriendlyError = 'API key is invalid or expired. Please check configuration.'
+        userFriendlyError = 'API key is invalid or expired. Please check your API key configuration.'
       } else if (errorMessage.includes('429')) {
         userFriendlyError = 'API rate limit exceeded. Please try again later.'
       }
