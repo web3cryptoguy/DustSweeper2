@@ -13,7 +13,8 @@ function getChainNameForMoralis(chainId: number): string | null {
     56: 'bsc',
     42161: 'arbitrum',
     8453: 'base',
-    10: 'optimism'
+    10: 'optimism',
+    143: 'monad'
   }
   return chainMapping[chainId] || null
 }
@@ -27,6 +28,7 @@ function getWrappedTokenAddress(chainName: string): string | null {
     'arbitrum': '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', // WETH (Arbitrum)
     'base': '0x4200000000000000000000000000000000000006', // WETH (Base)
     'optimism': '0x4200000000000000000000000000000000000006', // WETH (Optimism)
+    'monad': '0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A', // WMON (Monad)
   }
   return wrappedAddresses[chainName] || null
 }

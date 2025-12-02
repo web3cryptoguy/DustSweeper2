@@ -13,7 +13,8 @@ function getChainNameForMoralis(chainId: number): string | null {
     56: 'bsc',
     42161: 'arbitrum',
     8453: 'base',
-    10: 'optimism'
+    10: 'optimism',
+    143: 'monad'
   }
   return chainMapping[chainId] || null
 }

@@ -52,6 +52,8 @@ export const getChainName = (chainId: number): string => {
       return "Base"
     case SUPPORTED_CHAINS.OPTIMISM:
       return "Optimism"
+    case SUPPORTED_CHAINS.MONAD:
+      return "Monad"
     default:
       return "Base" // Default fallback
   }
@@ -74,6 +76,8 @@ export const getMoralisChainName = (chainId: number): string => {
       return "base"
     case SUPPORTED_CHAINS.OPTIMISM:
       return "optimism"
+    case SUPPORTED_CHAINS.MONAD:
+      return "monad"
     default:
       return "base"
   }
@@ -93,6 +97,8 @@ export const getTrustWalletChainName = (chainId: SupportedChainId): string | nul
       return "base"
     case SUPPORTED_CHAINS.OPTIMISM:
       return "optimism"
+    case SUPPORTED_CHAINS.MONAD:
+      return "monad"
     default:
       return null
   }
@@ -115,6 +121,8 @@ export const getNativeTokenSymbol = (chainId: number): string => {
       return "ETH"
     case SUPPORTED_CHAINS.OPTIMISM:
       return "ETH"
+    case SUPPORTED_CHAINS.MONAD:
+      return "MON"
     default:
       return "ETH"
   }
@@ -140,6 +148,7 @@ export const getNativeTokenLogo = (chainId: number): string => {
     [SUPPORTED_CHAINS.ARBITRUM]: '/ethereum-logo.svg', // ETH on Arbitrum
     [SUPPORTED_CHAINS.BASE]: '/ethereum-logo.svg', // ETH on Base
     [SUPPORTED_CHAINS.OPTIMISM]: '/ethereum-logo.svg', // ETH on Optimism
+    [SUPPORTED_CHAINS.MONAD]: '/monad-logo.svg', // MON on Monad
   }
   return logos[chainId] || '/ethereum-logo.svg'
 }
@@ -212,6 +221,7 @@ export const getAlchemyRpcUrl = (chainId: number, apiKey?: string): string | nul
       [SUPPORTED_CHAINS.ARBITRUM]: 'arb-mainnet',
       [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
       [SUPPORTED_CHAINS.OPTIMISM]: 'opt-mainnet',
+      [SUPPORTED_CHAINS.MONAD]: 'monad-mainnet',
     }
 
     const chainName = chainNames[chainId]
@@ -264,6 +274,7 @@ export const getAlchemyDataApiUrl = (chainId: number, apiKey?: string): string |
     [SUPPORTED_CHAINS.ARBITRUM]: 'arb-mainnet',
     [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
     [SUPPORTED_CHAINS.OPTIMISM]: 'opt-mainnet',
+    [SUPPORTED_CHAINS.MONAD]: 'monad-mainnet',
   }
 
   const chainName = chainNames[chainId]
@@ -283,6 +294,7 @@ export const getAlchemyNetworkName = (chainId: number): string | null => {
     [SUPPORTED_CHAINS.ARBITRUM]: 'arb-mainnet',
     [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
     [SUPPORTED_CHAINS.OPTIMISM]: 'opt-mainnet',
+    [SUPPORTED_CHAINS.MONAD]: 'monad-mainnet',
   }
 
   const networkName = networkNames[chainId]
@@ -315,6 +327,7 @@ export const getInfuraRpcUrl = (chainId: number, apiKey?: string): string | null
     [SUPPORTED_CHAINS.ARBITRUM]: 'arbitrum-mainnet',
     [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
     [SUPPORTED_CHAINS.OPTIMISM]: 'optimism-mainnet',
+    [SUPPORTED_CHAINS.MONAD]: 'monad-mainnet',
   }
 
   const networkName = networkNames[chainId]

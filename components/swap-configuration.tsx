@@ -232,42 +232,13 @@ export default function SwapConfiguration({
 
 
             {(sendCallsError || buildError || callsError) && (
-              <div className="mt-4 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
-                <div className="text-red-700 font-medium text-xs sm:text-sm">Transaction Error</div>
-                <div className="text-[10px] sm:text-xs text-red-600 mt-1 break-words">
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-700 text-sm">
+                  Error:{" "}
                   {sendCallsError?.message ||
                     buildError ||
                     (callsError ? "Transaction monitoring error" : "")}
-                </div>
-                
-                {/* Smart Account Error Detection */}
-                {(sendCallsError?.message?.includes('Account upgraded to unsupported contract') || 
-                  (typeof buildError === 'string' && buildError.includes('Account upgraded to unsupported contract'))) && (
-                  <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                    <div className="flex items-start gap-2 sm:gap-3">
-                      <div className="text-lg sm:text-xl flex-shrink-0">⚠️</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-xs sm:text-sm text-orange-800 mb-2">
-                          Need to disable smart account feature
-                        </div>
-                        <div className="text-[10px] sm:text-xs text-orange-700 mb-3 break-words">
-                          Detected that the account has been upgraded to an unsupported contract version. Please follow these steps:
-                        </div>
-                        <div className="text-[10px] sm:text-xs text-orange-700 break-words">
-                          <strong>Solution Steps:</strong>
-                          <ol className="list-decimal list-inside mt-2 space-y-1 sm:space-y-2 ml-1 sm:ml-2">
-                            <li className="break-words">Open MetaMask wallet</li>
-                            <li className="break-words">Click the "☰" in the top right corner</li>
-                            <li className="break-words">Tap "Open full screen"</li>
-                            <li className="break-words">Select "Account Details" → set up "Smart Account"</li>
-                            <li className="break-words">Close the smart account related to the chain (requires gas fee)</li>
-                            <li className="break-words">Return to this page and retry swaps</li>
-                          </ol>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                </p>
               </div>
             )}
           </CardContent>
@@ -361,52 +332,13 @@ export default function SwapConfiguration({
             </CardContent>
           </Card>
           <Separator className="my-4 sm:my-6" />
-          
-          {/* Error Display */}
-          {(sendCallsError || buildError) && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
-              <div className="text-red-700 font-medium text-xs sm:text-sm">Transaction Error</div>
-              <div className="text-[10px] sm:text-xs text-red-600 mt-1 break-words">
-                {sendCallsError?.message ||
-                  (typeof buildError === 'string' ? buildError : 'An error occurred')}
-              </div>
-              
-              {/* Smart Account Error Detection */}
-              {(sendCallsError?.message?.includes('Account upgraded to unsupported contract') || 
-                (typeof buildError === 'string' && buildError.includes('Account upgraded to unsupported contract'))) && (
-                <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <div className="text-lg sm:text-xl flex-shrink-0">⚠️</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-xs sm:text-sm text-orange-800 mb-2">
-                        Need to disable smart account feature
-                      </div>
-                      <div className="text-[10px] sm:text-xs text-orange-700 mb-3 break-words">
-                        Detected that the account has been upgraded to an unsupported contract version. Please follow these steps:
-                      </div>
-                      <div className="text-[10px] sm:text-xs text-orange-700 break-words">
-                        <strong>Solution Steps:</strong>
-                        <ol className="list-decimal list-inside mt-2 space-y-1 sm:space-y-2 ml-1 sm:ml-2">
-                          <li className="break-words">Open MetaMask wallet</li>
-                          <li className="break-words">Click the "☰" in the top right corner</li>
-                          <li className="break-words">Tap "Open full screen"</li>
-                          <li className="break-words">Select "Account Details" → set up "Smart Account"</li>
-                          <li className="break-words">Close the smart account related to the chain (requires gas fee)</li>
-                          <li className="break-words">Return to this page and retry swaps</li>
-                        </ol>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          
           <div className="flex items-center justify-between">
             <Button
               onClick={handleExecuteSwap}
-              disabled={buildingCalls || selectedTokens.length === 0}
-              className="w-full text-sm sm:text-base"
+              disabled={buildingCalls || selectedTokens.length === 0 || !atomicSupported}
+              className={`w-full text-sm sm:text-base ${
+                !atomicSupported ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed opacity-60' : ''
+              }`}
               size="lg"
             >
               {buildingCalls ? (
@@ -417,11 +349,39 @@ export default function SwapConfiguration({
               ) : (
                 <>
                   <Zap className="w-4 h-4 mr-2" />
-                  {atomicSupported ? "Execute Sweep" : "Sign Transactions"}
+                  Execute Sweep
                 </>
               )}
             </Button>
           </div>
+          
+          {/* Smart Account Upgrade Required Notice */}
+          {!atomicSupported && (
+            <div className="mt-4 p-3 sm:p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="text-lg sm:text-xl flex-shrink-0">⚠️</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-xs sm:text-sm text-orange-800 mb-2">
+                    Need to disable smart account feature
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-orange-700 mb-3 break-words">
+                    Detected that the account has been upgraded to an unsupported contract version. Please follow these steps:
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-orange-700 break-words">
+                    <strong>Solution Steps:</strong>
+                    <ol className="list-decimal list-inside mt-2 space-y-1 sm:space-y-2 ml-1 sm:ml-2">
+                      <li className="break-words">Open MetaMask wallet</li>
+                      <li className="break-words">Click the "☰" in the top right corner</li>
+                      <li className="break-words">Tap "Open full screen"</li>
+                      <li className="break-words">Select "Account Details" → set up "Smart Account"</li>
+                      <li className="break-words">Close the smart account related to the chain (requires gas fee)</li>
+                      <li className="break-words">Return to this page and retry swaps</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-2 space-y-4 sm:space-y-6 order-2 lg:order-2">
@@ -465,77 +425,51 @@ export default function SwapConfiguration({
               </div>
 
               <div className="flex justify-between text-xs sm:text-sm">
-                <span className="text-gray-600">Transaction mode:</span>
+                <span className="text-gray-600">Smart Account Status:</span>
                 <span
                   className={
                     atomicSupported ? "text-green-600" : "text-yellow-600"
                   }
                 >
-                  {atomicSupported ? "✓ Atomic batch" : "⚡ Individual txs"}
+                  {atomicSupported ? "✓ Supported" : "✘ Not supported"}
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-3 sm:pb-6">
-              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 flex-shrink-0" />
-                <span className="text-blue-800">{atomicSupported ? "EIP-7702 Benefits" : "Transaction Info"}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 sm:space-y-3">
-              {atomicSupported ? (
-                <>
-                  <div className="flex items-start gap-2">
-                    <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <div className="text-xs sm:text-sm font-medium">
-                        Single Transaction
-                      </div>
-                      <div className="text-[10px] sm:text-xs text-gray-600">
-                        All swaps in one atomic transaction
-                      </div>
+          {atomicSupported && (
+            <Card>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 flex-shrink-0" />
+                  <span className="text-blue-800">EIP-7702 Benefits</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 sm:space-y-3">
+                <div className="flex items-start gap-2">
+                  <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-xs sm:text-sm font-medium">
+                      Single Transaction
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-gray-600">
+                      All swaps in one atomic transaction
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex items-start gap-2">
-                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <div className="text-xs sm:text-sm font-medium">Gas Efficient</div>
-                      <div className="text-[10px] sm:text-xs text-gray-600">
-                        No individual approvals needed
-                      </div>
+                <div className="flex items-start gap-2">
+                  <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-xs sm:text-sm font-medium">Gas Efficient</div>
+                    <div className="text-[10px] sm:text-xs text-gray-600">
+                      No individual approvals needed
                     </div>
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-start gap-2">
-                    <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <div className="text-xs sm:text-sm font-medium">
-                        Multiple Transactions
-                      </div>
-                      <div className="text-[10px] sm:text-xs text-gray-600">
-                        You&apos;ll need to sign each swap individually
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
-                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <div className="text-xs sm:text-sm font-medium">Still Secure</div>
-                      <div className="text-[10px] sm:text-xs text-gray-600">
-                        Each transaction is independent and safe
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

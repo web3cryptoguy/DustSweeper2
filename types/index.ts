@@ -19,6 +19,7 @@ export const SUPPORTED_CHAINS = {
   ARBITRUM: 42161,
   BASE: 8453,
   OPTIMISM: 10,
+  MONAD: 143,
 } as const
 
 export type SupportedChainId = (typeof SUPPORTED_CHAINS)[keyof typeof SUPPORTED_CHAINS]
@@ -160,6 +161,7 @@ export const CHAIN_NAMES: Record<SupportedChainId, string> = {
   [SUPPORTED_CHAINS.ARBITRUM]: "Arbitrum",
   [SUPPORTED_CHAINS.BASE]: "Base",
   [SUPPORTED_CHAINS.OPTIMISM]: "Optimism",
+  [SUPPORTED_CHAINS.MONAD]: "Monad",
 } as const
 
 /**
@@ -172,6 +174,7 @@ export const EXPLORER_URLS: Record<SupportedChainId, string> = {
   [SUPPORTED_CHAINS.ARBITRUM]: "https://arbiscan.io",
   [SUPPORTED_CHAINS.BASE]: "https://basescan.org",
   [SUPPORTED_CHAINS.OPTIMISM]: "https://optimistic.etherscan.io",
+  [SUPPORTED_CHAINS.MONAD]: "https://monad.socialscan.io",
 } as const
 
 /**
@@ -184,4 +187,5 @@ export const TRUST_WALLET_CHAIN_NAMES: Record<SupportedChainId, string> = {
   [SUPPORTED_CHAINS.ARBITRUM]: "arbitrum",
   [SUPPORTED_CHAINS.BASE]: "base",
   [SUPPORTED_CHAINS.OPTIMISM]: "optimism",
+  [SUPPORTED_CHAINS.MONAD]: "monad",
 } as const

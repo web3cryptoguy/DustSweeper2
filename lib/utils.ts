@@ -70,6 +70,7 @@ export function getTokenLogoUrl(
       42161: '/ethereum-logo.svg',  // Arbitrum (uses ETH)
       8453: '/ethereum-logo.svg',   // Base (uses ETH)
       10: '/ethereum-logo.svg',     // Optimism (uses ETH)
+      143: '/monad-logo.svg',       // Monad (uses MON)
     }
     
     const nativeLogo = nativeTokenLogos[chainId]

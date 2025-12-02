@@ -25,6 +25,8 @@ const getChainLogo = (chainId: number): string => {
       return '/base-logo.svg';
     case 10: // Optimism
       return '/optimism-logo.svg';
+    case 143: // Monad
+      return '/monad-logo.svg';
     default:
       return '/placeholder.svg';
   }
@@ -115,6 +117,7 @@ export default function Navbar({ envStatus }: NavbarProps) {
                         { id: 42161, name: "Arbitrum" },
                         { id: 8453, name: "Base" },
                         { id: 10, name: "Optimism" },
+                        { id: 143, name: "Monad" },
                       ].map((chain) => (
                         <button
                           key={chain.id}

@@ -38,12 +38,12 @@ export default function Footer() {
             </a>
           </div>
           <span className="hidden sm:inline text-xs text-gray-400 sm:ml-4 text-center max-w-2xl">
-            Dust Sweeper is a decentralized application. Always verify transactions before signing. Not financial advice.
+            DustSweeper is a decentralized application. Always verify transactions before signing. Not financial advice.
           </span>
         </div>
         <div className="mt-2 sm:hidden">
           <span className="text-[10px] text-gray-400 text-center block px-4">
-            Dust Sweeper is a decentralized application. Always verify transactions before signing. Not financial advice.
+            DustSweeper is a decentralized application. Always verify transactions before signing. Not financial advice.
           </span>
         </div>
       </div>

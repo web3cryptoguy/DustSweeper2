@@ -5,7 +5,32 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, http, createConfig, fallback } from "wagmi";
 import { metaMask } from "wagmi/connectors";
 import { mainnet, polygon, bsc, arbitrum, base, optimism, sepolia } from "viem/chains";
+import { defineChain } from "viem";
 import { getInfuraRpcUrl, getAlchemyRpcUrl } from "@/lib/config";
+
+// Define Monad chain
+// 注意：Monad 链目前尚未被 viem/chains 官方支持，因此需要使用 defineChain 手动定义
+// 如果未来 viem 添加了 Monad 支持，可以改为从 viem/chains 导入
+export const monad = defineChain({
+  id: 143,
+  name: 'Monad',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'MON',
+    symbol: 'MON',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://monad-mainnet.api.onfinality.io/public'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Monad Explorer',
+      url: 'https://monad.socialscan.io',
+    },
+  },
+});
 
 // API Keys for RPC endpoints (priority: Infura > Alchemy)
 const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
@@ -61,6 +86,10 @@ const supportedChains = [
   base,
   optimism,
   {
+    ...monad,
+    iconUrl: '/monad-logo.svg',
+  },
+  {
     ...sepolia,
     iconUrl: '/ethereum2-logo.svg',
   },
@@ -85,6 +114,7 @@ export const config = createConfig({
     [arbitrum.id]: getRpcTransport(arbitrum.id),
     [base.id]: getRpcTransport(base.id),
     [optimism.id]: getRpcTransport(optimism.id),
+    [monad.id]: getRpcTransport(monad.id),
     [sepolia.id]: getRpcTransport(sepolia.id),
   },
 });

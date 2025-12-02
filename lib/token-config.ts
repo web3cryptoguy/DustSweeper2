@@ -151,6 +151,23 @@ export const OUTCOME_TOKENS: Record<number, TokenConfig[]> = {
       logoUrl: "/usdt1-logo.svg",
     },
   ],
+  143: [
+    // Monad
+    {
+      address: "0x0000000000000000000000000000000000000000",
+      symbol: "MON",
+      decimals: 18,
+      name: "Monad",
+      logoUrl: "/monad-logo.svg",
+    },
+    {
+      address: "0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A",
+      symbol: "WMON",
+      decimals: 18,
+      name: "Wrapped Monad",
+      logoUrl: "/monad-logo.svg",
+    },
+  ],
 };
 
 export function getOutcomeTokenAddress(symbol: string, chainId: number): string {

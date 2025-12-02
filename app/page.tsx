@@ -37,6 +37,8 @@ const getChainLogo = (chainId: number): string => {
       return '/base-logo.svg'
     case 10: // Optimism
       return '/optimism-logo.svg'
+    case 143: // Monad
+      return '/monad-logo.svg'
     default:
       return '/placeholder.svg'
   }
@@ -493,12 +495,6 @@ export default function DustSweeperApp() {
                       <div className="flex justify-between">
                         <span>Slippage:</span>
                         <span>{(APP_CONFIG.SLIPPAGE_TOLERANCE * 100).toFixed(1)}%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Batch Support:</span>
-                        <span className={atomicSupported ? "text-green-600" : "text-amber-600"}>
-                          {atomicSupported ? "✓ Available" : "⚠ Upgrade Required"}
-                        </span>
                       </div>
                     </div>
 

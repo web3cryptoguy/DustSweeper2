@@ -57,9 +57,6 @@ export default function EIP7702Info() {
                 <strong>With Smart Account:</strong> Batch all swaps into one transaction using{" "}
                 <strong>MetaMask</strong> when prompted to convert to a smart wallet.
               </p>
-              <p className="text-amber-700 mt-1">
-                <strong>Without Smart Account:</strong> You can still sweep your tokens! You&apos;ll just need to sign each swap transaction individually.
-              </p>
             </div>
           </div>
         </div>
