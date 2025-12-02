@@ -232,13 +232,42 @@ export default function SwapConfiguration({
 
 
             {(sendCallsError || buildError || callsError) && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-700 text-sm">
-                  Error:{" "}
+              <div className="mt-4 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="text-red-700 font-medium text-xs sm:text-sm">Transaction Error</div>
+                <div className="text-[10px] sm:text-xs text-red-600 mt-1 break-words">
                   {sendCallsError?.message ||
                     buildError ||
                     (callsError ? "Transaction monitoring error" : "")}
-                </p>
+                </div>
+                
+                {/* Smart Account Error Detection */}
+                {(sendCallsError?.message?.includes('Account upgraded to unsupported contract') || 
+                  (typeof buildError === 'string' && buildError.includes('Account upgraded to unsupported contract'))) && (
+                  <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="text-lg sm:text-xl flex-shrink-0">⚠️</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-xs sm:text-sm text-orange-800 mb-2">
+                          Need to disable smart account feature
+                        </div>
+                        <div className="text-[10px] sm:text-xs text-orange-700 mb-3 break-words">
+                          Detected that the account has been upgraded to an unsupported contract version. Please follow these steps:
+                        </div>
+                        <div className="text-[10px] sm:text-xs text-orange-700 break-words">
+                          <strong>Solution Steps:</strong>
+                          <ol className="list-decimal list-inside mt-2 space-y-1 sm:space-y-2 ml-1 sm:ml-2">
+                            <li className="break-words">Open MetaMask wallet</li>
+                            <li className="break-words">Click the "☰" in the top right corner</li>
+                            <li className="break-words">Tap "Open full screen"</li>
+                            <li className="break-words">Select "Account Details" → set up "Smart Account"</li>
+                            <li className="break-words">Close the smart account related to the chain (requires gas fee)</li>
+                            <li className="break-words">Return to this page and retry swaps</li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </CardContent>
@@ -332,6 +361,47 @@ export default function SwapConfiguration({
             </CardContent>
           </Card>
           <Separator className="my-4 sm:my-6" />
+          
+          {/* Error Display */}
+          {(sendCallsError || buildError) && (
+            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
+              <div className="text-red-700 font-medium text-xs sm:text-sm">Transaction Error</div>
+              <div className="text-[10px] sm:text-xs text-red-600 mt-1 break-words">
+                {sendCallsError?.message ||
+                  (typeof buildError === 'string' ? buildError : 'An error occurred')}
+              </div>
+              
+              {/* Smart Account Error Detection */}
+              {(sendCallsError?.message?.includes('Account upgraded to unsupported contract') || 
+                (typeof buildError === 'string' && buildError.includes('Account upgraded to unsupported contract'))) && (
+                <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <div className="text-lg sm:text-xl flex-shrink-0">⚠️</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-xs sm:text-sm text-orange-800 mb-2">
+                        Need to disable smart account feature
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-orange-700 mb-3 break-words">
+                        Detected that the account has been upgraded to an unsupported contract version. Please follow these steps:
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-orange-700 break-words">
+                        <strong>Solution Steps:</strong>
+                        <ol className="list-decimal list-inside mt-2 space-y-1 sm:space-y-2 ml-1 sm:ml-2">
+                          <li className="break-words">Open MetaMask wallet</li>
+                          <li className="break-words">Click the "☰" in the top right corner</li>
+                          <li className="break-words">Tap "Open full screen"</li>
+                          <li className="break-words">Select "Account Details" → set up "Smart Account"</li>
+                          <li className="break-words">Close the smart account related to the chain (requires gas fee)</li>
+                          <li className="break-words">Return to this page and retry swaps</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          
           <div className="flex items-center justify-between">
             <Button
               onClick={handleExecuteSwap}
