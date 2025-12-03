@@ -84,7 +84,96 @@
   * {
     @apply border-border;
   }
+  html {
+    /* 移动端全屏支持 */
+    height: 100%;
+    height: -webkit-fill-available;
+    /* 防止移动端双击缩放 */
+    touch-action: manipulation;
+    /* 平滑滚动 */
+    scroll-behavior: smooth;
+    /* 确保宽度适配 */
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground;
+    /* 移动端全屏支持 */
+    min-height: 100%;
+    min-height: -webkit-fill-available;
+    /* 防止文本选择（移动端优化） */
+    -webkit-tap-highlight-color: transparent;
+    /* 优化字体渲染 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* 防止水平滚动 */
+    overflow-x: hidden;
+    /* 确保宽度适配 */
+    width: 100%;
+    max-width: 100vw;
+    /* 不在这里设置 padding，让容器自己处理安全区域 */
+  }
+  
+  /* 移动端全屏容器 */
+  #__next,
+  main {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+  
+  /* 移动端优化：防止点击高亮 */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* 移动端优化：改善滚动性能 */
+  @media (max-width: 768px) {
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 确保所有元素都在屏幕内 */
+    html, body, #__next {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* 移动端容器优化 - 确保充分利用屏幕宽度且内容不被截断 */
+    .container {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      box-sizing: border-box;
+      /* 支持安全区域，最小 padding */
+      padding-left: max(0.75rem, env(safe-area-inset-left));
+      padding-right: max(0.75rem, env(safe-area-inset-right));
+    }
+    
+    /* 减少 Card 组件在移动端的 padding */
+    [class*="p-6"] {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+    
+    /* 优化 CardHeader 和 CardContent 在移动端的 padding */
+    .p-6 {
+      padding: 1rem !important;
+    }
+    
+    /* 确保所有内容元素不会超出屏幕 */
+    * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    
+    /* 防止图片和媒体元素超出 */
+    img, video, iframe {
+      max-width: 100%;
+      height: auto;
+    }
   }
 }

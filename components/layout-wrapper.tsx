@@ -17,12 +17,12 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   // 首页（未连接钱包）不显示导航栏
   return (
-    <>
+    <div className="w-full min-h-screen flex flex-col">
       {isConnected && <Navbar envStatus={envStatus} />}
-      <div className={isConnected ? "pt-24 sm:pt-20" : ""}>
+      <div className={`flex-1 w-full ${isConnected ? "pt-16 sm:pt-20" : ""}`}>
         {children}
       </div>
-    </>
+    </div>
   )
 }
 

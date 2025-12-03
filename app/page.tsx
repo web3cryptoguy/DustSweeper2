@@ -211,8 +211,8 @@ export default function DustSweeperApp() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100">
-        <div className="container mx-auto px-4 py-16">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 w-full overflow-x-hidden">
+        <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-16 max-w-full">
           <div className="text-center max-w-4xl mx-auto">
             <div className="mb-8">
               <div className="inline-flex items-center justify-center mb-6">
@@ -342,8 +342,8 @@ export default function DustSweeperApp() {
 
   if (swapStep === "success" && swapResult) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-        <div className="container mx-auto px-4 py-8 sm:py-16">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 w-full overflow-x-hidden">
+        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 md:py-16 max-w-full">
           <div className="max-w-2xl mx-auto text-center">
             <div className="mb-6 sm:mb-8">
               <CheckCircle2 className="w-12 h-12 sm:w-16 sm:h-16 text-green-600 mx-auto mb-3 sm:mb-4" />
@@ -369,8 +369,8 @@ export default function DustSweeperApp() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+    <div className="min-h-screen bg-gray-100 w-full">
+      <main className="container mx-auto px-0 sm:px-4 md:px-6 py-3 sm:py-4 md:py-8 w-full">
         {swapStep === "select" && (
           <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             <div className="lg:col-span-2 order-1 lg:order-1">

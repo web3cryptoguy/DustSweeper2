@@ -5,8 +5,8 @@ import Image from "next/image"
 
 export default function Footer() {
   return (
-    <footer className="sticky top-[100vh] bg-white border-t">
-      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+    <footer className="bg-white border-t w-full mt-auto">
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 max-w-full">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2 text-xs sm:text-sm text-gray-600">
           <div className="flex items-center justify-center gap-2 flex-wrap">
             <span>Built with</span>

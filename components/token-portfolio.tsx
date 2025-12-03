@@ -50,6 +50,14 @@ const truncateAddress = (address: string): string => {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 };
 
+// 截断代币名称，限制长度以避免布局问题
+// 移动端使用12字符限制，确保不会导致显示问题
+const truncateTokenName = (name: string, maxLength: number = 12): string => {
+  if (!name) return "";
+  if (name.length <= maxLength) return name;
+  return `${name.slice(0, maxLength - 3)}...`;
+};
+
 const getBlockExplorerUrl = (address: string, chainId: SupportedChainId): string => {
   const baseUrls: Record<SupportedChainId, string> = {
     1: "https://etherscan.io/token",
@@ -58,6 +66,7 @@ const getBlockExplorerUrl = (address: string, chainId: SupportedChainId): string
     42161: "https://arbiscan.io/token",
     8453: "https://basescan.org/token",
     10: "https://optimistic.etherscan.io/token",
+    143: "https://monad.socialscan.io/token",
   };
   return `${baseUrls[chainId] || baseUrls[1]}/${address}`;
 };
@@ -124,8 +133,8 @@ export default function TokenPortfolio({
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3 sm:pb-6">
+    <Card className="overflow-visible">
+      <CardHeader className="pb-3 sm:pb-6 px-3 sm:px-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <CardTitle className="text-base sm:text-lg text-blue-800">Your Token Portfolio</CardTitle>
@@ -145,7 +154,7 @@ export default function TokenPortfolio({
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="pt-3 sm:pt-6">
+      <CardContent className="pt-3 sm:pt-6 px-3 sm:px-6">
         <div className="space-y-3 sm:space-y-4">
           {selectedCount > 0 && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-2.5 sm:p-3 flex items-center justify-between">
@@ -158,7 +167,7 @@ export default function TokenPortfolio({
             </div>
           )}
 
-          <div className="space-y-2 max-h-[60vh] sm:max-h-96 overflow-y-auto -mx-1 px-1">
+          <div className="space-y-2 max-h-[60vh] sm:max-h-96 overflow-y-auto overflow-x-visible">
             {tokens.length === 0 ? (
               <p className="text-center text-gray-500 py-8">No tokens found in your wallet</p>
             ) : (
@@ -171,7 +180,9 @@ export default function TokenPortfolio({
                   const renderToken = (token: Token, isDisabled: boolean = false) => {
                     const tokenAmount = formatTokenAmount(token.balance, token.contract_decimals);
                     const tokenSymbol = token.contract_ticker_symbol || "Unknown";
-                    const tokenName = token.contract_name || tokenSymbol;
+                    const fullTokenName = token.contract_name || tokenSymbol;
+                    // 移动端限制12字符，避免布局问题
+                    const tokenName = truncateTokenName(fullTokenName, 12);
                     const rawBalance = Number(token.balance) / Math.pow(10, token.contract_decimals);
                     // Use usd_price if available, otherwise calculate from quote
                     const price = token.usd_price !== undefined 
@@ -185,7 +196,7 @@ export default function TokenPortfolio({
                     return (
                       <div
                         key={token.contract_address}
-                        className={`flex items-start sm:items-center gap-2 sm:gap-3 p-2.5 sm:p-3 border rounded-lg transition-colors ${
+                        className={`flex items-start sm:items-center gap-1.5 sm:gap-3 p-2 sm:p-3 border rounded-lg transition-colors ${
                           isDisabled 
                             ? "bg-gray-50 border-gray-200 opacity-75"
                             : isSelected
@@ -213,9 +224,12 @@ export default function TokenPortfolio({
                           alt={tokenName}
                           className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0"
                         />
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 overflow-hidden">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-xs sm:text-sm truncate">
+                            <h3 
+                              className="font-semibold text-xs sm:text-sm truncate max-w-[150px] sm:max-w-none"
+                              title={fullTokenName}
+                            >
                               {tokenName}
                             </h3>
                           </div>
@@ -237,7 +251,7 @@ export default function TokenPortfolio({
                             )}
                           </div>
                         </div>
-                        <div className="flex flex-col items-end gap-0.5 sm:gap-1 flex-shrink-0 min-w-[80px] sm:min-w-[100px]">
+                        <div className="flex flex-col items-end gap-0.5 sm:gap-1 flex-shrink-0 min-w-[65px] sm:min-w-[100px]">
                           <div className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 hidden sm:block">
                             Current Price
                           </div>
