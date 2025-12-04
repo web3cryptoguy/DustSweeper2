@@ -141,7 +141,7 @@ export default function Navbar({ envStatus }: NavbarProps) {
                     <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                   </Button>
                   {showNetworkMenu && (
-                    <div className="fixed sm:absolute right-2 sm:right-0 top-[60px] sm:top-auto sm:mt-2 w-[calc(100vw-1rem)] sm:w-48 max-w-[220px] sm:max-w-none bg-white border border-gray-200 rounded-lg shadow-lg z-[60]">
+                    <div className="fixed sm:absolute right-2 sm:right-0 top-[60px] sm:top-auto sm:mt-2 w-auto min-w-[160px] sm:w-48 max-w-[calc(100vw-1rem)] sm:max-w-none bg-white border border-gray-200 rounded-lg shadow-lg z-[60]">
                       <div className="p-1">
                         {[
                           { id: 1, name: "Ethereum" },

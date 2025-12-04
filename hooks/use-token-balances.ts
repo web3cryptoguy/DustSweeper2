@@ -156,6 +156,58 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
         throw new Error('Moralis API keys are not configured. Please set NEXT_PUBLIC_MORALIS_PRIMARY_API_KEY or NEXT_PUBLIC_MORALIS_FALLBACK_API_KEY in your environment variables.')
       }
 
+      // 如果有有效缓存，直接使用缓存数据，避免重复调用API
+      // 注意：即使cachedTokens为空数组，也使用缓存（表示之前查询过但没有代币）
+      if (useCachedBalance) {
+        // 使用缓存数据，只更新原生代币余额和价格
+        const allTokens: Token[] = []
+        
+        if (balanceData?.value !== undefined && balanceData.value !== null) {
+          const nativeBalance = balanceData.value.toString()
+          const nativeBalanceNum = Number(nativeBalance) / Math.pow(10, balanceData.decimals)
+          
+          // 尝试从缓存中获取原生代币价格，如果没有则获取
+          let nativePrice = nativeTokenPrice
+          if (!nativePrice) {
+            try {
+              const apiKey = PRIMARY_API_KEY || FALLBACK_API_KEY
+              nativePrice = await fetchNativeTokenPrice(chainName, apiKey)
+              setNativeTokenPrice(nativePrice)
+            } catch (error) {
+              console.error('Failed to fetch native token price:', error)
+            }
+          }
+          
+          const nativeQuote = nativePrice ? nativePrice * nativeBalanceNum : 0
+          
+          const nativeToken: Token = {
+            contract_address: '0x0000000000000000000000000000000000000000' as Address,
+            contract_name: getNativeTokenSymbol(chainId),
+            contract_ticker_symbol: getNativeTokenSymbol(chainId),
+            contract_decimals: balanceData.decimals,
+            logo_urls: {
+              token_logo_url: getNativeTokenLogo(chainId),
+            },
+            supports_erc: [],
+            native_token: true,
+            is_spam: false,
+            balance: nativeBalance,
+            quote: nativeQuote,
+            usd_price: nativePrice || undefined,
+          }
+          
+          allTokens.push(nativeToken)
+        }
+        
+        allTokens.push(...cachedTokens)
+        allTokens.sort((a: Token, b: Token) => b.quote - a.quote)
+        
+        setTokens(allTokens)
+        setApiStatus('working')
+        setLoading(false)
+        return // 直接返回，不调用API
+      }
+
       // Directly call Moralis API to fetch token balances
       const url = `${MORALIS_BASE_URL}/${address}/erc20?chain=${chainName}&limit=100&exclude_spam=true&exclude_unverified_contracts=true`
       
