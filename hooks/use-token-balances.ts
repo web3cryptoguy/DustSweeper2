@@ -85,11 +85,38 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [apiStatus, setApiStatus] = useState<ApiStatus>('untested')
+  const [isInitialized, setIsInitialized] = useState(false)
+  const cacheAppliedRef = useRef(false)
   
   const { isTokenVerified, loading: verifiedLoading, apiStatus: verifiedApiStatus, isReady: verificationReady } = useVerifiedTokens(chainId)
   const prevAddressRef = useRef<string | undefined>(address)
 
   const cacheKey = useMemo(() => address && chainId ? getCacheKey(address, chainId) : '', [address, chainId])
+
+  // 初始化时立即检查缓存，避免不必要的 loading
+  useEffect(() => {
+    if (!address || !chainId || !cacheKey) {
+      setIsInitialized(true)
+      cacheAppliedRef.current = false
+      return
+    }
+
+    // 重置缓存应用标志
+    cacheAppliedRef.current = false
+
+    // 立即检查缓存
+    const cached = getCache<Token[]>(cacheKey)
+    if (cached !== null) {
+      console.log('初始化时使用缓存数据')
+      setTokens(cached.data)
+      setApiStatus('working')
+      setLoading(false)
+      cacheAppliedRef.current = true
+      setIsInitialized(true)
+    } else {
+      setIsInitialized(true)
+    }
+  }, [address, chainId, cacheKey])
 
   // Clear tokens and reset state when address changes
   useEffect(() => {
@@ -97,6 +124,8 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       setTokens([])
       setError(null)
       setApiStatus('untested')
+      setIsInitialized(false)
+      cacheAppliedRef.current = false
       prevAddressRef.current = address
     }
   }, [address])
@@ -109,16 +138,8 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       return
     }
 
-    // 检查缓存（参照参考项目）
-    const cached = cacheKey ? getCache<Token[]>(cacheKey) : null
-    let cachedTokens: Token[] = []
-    let useCachedBalance = false
-    
-    if (cached !== null) {
-      cachedTokens = cached.data
-      useCachedBalance = true
-    }
-
+    // 只有在没有缓存或需要刷新时才设置 loading 和调用 API
+    // 缓存检查已经在 useEffect 中完成，这里直接调用 API
     setLoading(true)
     setError(null)
 
@@ -131,16 +152,6 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       // Check if API keys are configured
       if (!PRIMARY_API_KEY && !FALLBACK_API_KEY) {
         throw new Error('Moralis API keys are not configured. Please set NEXT_PUBLIC_MORALIS_PRIMARY_API_KEY or NEXT_PUBLIC_MORALIS_FALLBACK_API_KEY in your environment variables.')
-      }
-
-      // 如果有有效缓存，直接使用缓存数据，避免重复调用API（参照参考项目）
-      // 注意：即使cachedTokens为空数组，也使用缓存（表示之前查询过但没有代币）
-      if (useCachedBalance) {
-        console.log('使用缓存数据')
-        setTokens(cachedTokens)
-        setApiStatus('working')
-        setLoading(false)
-        return // 直接返回，不调用API
       }
 
       // 使用新的API端点一次性获取原生代币+ERC20信息（参照参考项目）
@@ -404,6 +415,7 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       }
       
       setTokens(filteredTokens)
+      cacheAppliedRef.current = true
       
       // 更新缓存（即使为空数组也缓存）（参照参考项目）
       if (cacheKey) {
@@ -443,9 +455,33 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
     }
   }, [address, chainId, isTokenVerified, verificationReady, cacheKey])
 
+  // 只有在初始化完成且验证就绪时才获取数据
   useEffect(() => {
+    if (!isInitialized || !verificationReady || !address) {
+      return
+    }
+    
+    // 如果已经应用了缓存，不需要再次调用 API
+    if (cacheAppliedRef.current) {
+      return
+    }
+    
+    // 再次检查缓存，避免重复调用
+    const cached = cacheKey ? getCache<Token[]>(cacheKey) : null
+    if (cached !== null) {
+      // 如果已有缓存数据，且 tokens 状态为空，则使用缓存
+      if (tokens.length === 0) {
+        setTokens(cached.data)
+        setApiStatus('working')
+        setLoading(false)
+        cacheAppliedRef.current = true
+      }
+      return
+    }
+    
+    // 只有在没有缓存时才调用 API
     fetchTokens()
-  }, [fetchTokens])
+  }, [fetchTokens, isInitialized, verificationReady, cacheKey, address, tokens.length])
 
   return {
     tokens,
