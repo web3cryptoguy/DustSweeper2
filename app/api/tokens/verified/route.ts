@@ -34,7 +34,6 @@ export async function GET(request: NextRequest) {
 
     // Return empty tokens list - the app will rely on Moralis API's spam detection
     // (via the `exclude_spam=true` parameter and `possible_spam` field)
-    console.log(`⚠️ Returning empty verified tokens list for chain ${chainId}. Token verification will rely on spam detection from Moralis API.`)
     
     return NextResponse.json({
       tokens: [],

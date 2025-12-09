@@ -161,7 +161,7 @@ export default function Navbar({ envStatus }: NavbarProps) {
                                 }
                                 setShowNetworkMenu(false);
                               } catch (error) {
-                                console.error('切换网络失败:', error);
+                                console.error('Failed to switch network:', error);
                                 setShowNetworkMenu(false);
                               }
                             }}

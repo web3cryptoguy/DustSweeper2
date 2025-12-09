@@ -6,7 +6,7 @@ import { WagmiProvider, http, createConfig, fallback } from "wagmi";
 import { metaMask } from "wagmi/connectors";
 import { mainnet, polygon, bsc, arbitrum, base, optimism, sepolia } from "viem/chains";
 import { defineChain } from "viem";
-import { getInfuraRpcUrl, getAlchemyRpcUrl } from "@/lib/config";
+import { getInfuraRpcUrl } from "@/lib/config";
 
 // Define Monad chain
 // 注意：Monad 链目前尚未被 viem/chains 官方支持，因此需要使用 defineChain 手动定义
@@ -32,15 +32,13 @@ export const monad = defineChain({
   },
 });
 
-// API Keys for RPC endpoints (priority: Infura > Alchemy)
+// API Keys for RPC endpoints
 const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
-const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 
 /**
  * Get RPC transport for a chain with fallback priority:
  * 1. Infura (if API key is configured) - PRIORITY
- * 2. Alchemy (if API key is configured) - Fallback
- * 3. Default public RPC (fallback)
+ * 2. Default public RPC (fallback)
  */
 const getRpcTransport = (chainId: number) => {
   const transports: ReturnType<typeof http>[] = []
@@ -51,13 +49,7 @@ const getRpcTransport = (chainId: number) => {
     transports.push(http(infuraUrl))
   }
 
-  // Priority 2: Alchemy (备用)
-  const alchemyUrl = getAlchemyRpcUrl(chainId, ALCHEMY_API_KEY || undefined)
-  if (alchemyUrl) {
-    transports.push(http(alchemyUrl))
-  }
-
-  // Priority 3: Default public RPC (fallback)
+  // Priority 2: Default public RPC (fallback)
   // Always add default RPC as final fallback
   transports.push(http())
 

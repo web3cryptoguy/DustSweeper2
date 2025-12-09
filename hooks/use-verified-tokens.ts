@@ -93,7 +93,7 @@ export function useVerifiedTokens(chainId: number) {
         throw new Error(`Invalid response format - expected tokens array, got: ${typeof data.tokens}`)
       }
     } catch (err: any) {
-      console.error(`❌ Error fetching verified tokens for chain ${chainId}:`, err)
+      console.error(`Error fetching verified tokens for chain ${chainId}:`, err)
       setError(err.message)
       setApiStatus('failed')
 
@@ -103,12 +103,10 @@ export function useVerifiedTokens(chainId: number) {
         // Use cached data if available
         setVerifiedTokens(new Set(previousCache.verifiedTokens))
         setIsReady(true)
-        console.log(`⚠️ Using cached verified tokens due to API error: ${previousCache.verifiedTokens.size} tokens`)
       } else {
         // No cache available - start with empty set but mark as ready to prevent blocking
         setVerifiedTokens(new Set())
         setIsReady(true)
-        console.log(`⚠️ No cached verified tokens available, starting with empty set for chain ${chainId}`)
       }
       
       cache.set(chainId, {
@@ -129,13 +127,11 @@ export function useVerifiedTokens(chainId: number) {
   const isTokenVerified = useCallback((tokenAddress: string): boolean => {
     // Don't filter if we're not ready yet (prevents premature filtering)
     if (!isReady) {
-      console.log(`🔄 Verification not ready yet for token: ${tokenAddress}`)
       return false
     }
     
     // If API failed and we have no cached tokens, be more conservative
     if (verifiedTokens.size === 0 && apiStatus === 'failed') {
-      console.log(`⚠️ API failed and no cached tokens, allowing token (will rely on spam detection): ${tokenAddress}`)
       // Allow token through - Moralis API spam detection will handle filtering
       return true
     }
@@ -143,7 +139,6 @@ export function useVerifiedTokens(chainId: number) {
     // If API failed but we have cached tokens, use them
     if (apiStatus === 'failed' && verifiedTokens.size > 0) {
       const isVerified = verifiedTokens.has(tokenAddress.toLowerCase())
-      console.log(`📋 Using cached verification for ${tokenAddress}: ${isVerified}`)
       return isVerified
     }
     

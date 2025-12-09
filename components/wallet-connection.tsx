@@ -64,7 +64,6 @@ export default function WalletConnection() {
       if (document.visibilityState === 'visible' && !isConnected && connecting) {
         setTimeout(() => {
           if (window.ethereum?.selectedAddress) {
-            console.log('Page regained focus with address, attempting reconnect...')
             if (!isConnected) {
               try {
                 connect({ connector: metaMask() })

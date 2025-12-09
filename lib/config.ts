@@ -158,12 +158,10 @@ export const getNativeTokenLogo = (chainId: number): string => {
  */
 export interface ServerEnvironmentConfig {
   moralisApiKey?: string
-  alchemyApiKey?: string
 }
 
 export const getServerConfig = (): ServerEnvironmentConfig => ({
   moralisApiKey: process.env.MORALIS_API_KEY,
-  alchemyApiKey: process.env.ALCHEMY_API_KEY || process.env.ALCHEMY_DATA_API_KEY,
 })
 
 /**
@@ -199,109 +197,6 @@ export const getMoralisApiKeys = (): string[] => {
  */
 export const getAllApiKeys = getMoralisApiKeys
 
-/**
- * Get Alchemy API key
- * Supports both ALCHEMY_API_KEY and ALCHEMY_DATA_API_KEY environment variables
- */
-export const getAlchemyApiKey = (): string | null => {
-  return process.env.ALCHEMY_API_KEY || process.env.ALCHEMY_DATA_API_KEY || null
-}
-
-/**
- * Get Alchemy RPC URL for a chain
- * Supports both server-side and client-side API keys
- */
-export const getAlchemyRpcUrl = (chainId: number, apiKey?: string): string | null => {
-  // If apiKey is provided, use it directly
-  if (apiKey) {
-    const chainNames: Record<number, string> = {
-      [SUPPORTED_CHAINS.ETHEREUM]: 'eth-mainnet',
-      [SUPPORTED_CHAINS.POLYGON]: 'polygon-mainnet',
-      [SUPPORTED_CHAINS.BSC]: 'bnb-mainnet',
-      [SUPPORTED_CHAINS.ARBITRUM]: 'arb-mainnet',
-      [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
-      [SUPPORTED_CHAINS.OPTIMISM]: 'opt-mainnet',
-      [SUPPORTED_CHAINS.MONAD]: 'monad-mainnet',
-    }
-
-    const chainName = chainNames[chainId]
-    if (!chainName) return null
-
-    return `https://${chainName}.g.alchemy.com/v2/${apiKey}`
-  }
-
-  // Try to get API key from environment
-  let key: string | null = null
-  
-  // Client-side: try NEXT_PUBLIC_ALCHEMY_API_KEY
-  if (typeof window !== 'undefined') {
-    key = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || null
-  }
-  
-  // Server-side: try ALCHEMY_API_KEY or ALCHEMY_DATA_API_KEY
-  if (!key) {
-    key = getAlchemyApiKey()
-  }
-
-  if (!key) return null
-
-  const chainNames: Record<number, string> = {
-    [SUPPORTED_CHAINS.ETHEREUM]: 'eth-mainnet',
-    [SUPPORTED_CHAINS.POLYGON]: 'polygon-mainnet',
-    [SUPPORTED_CHAINS.BSC]: 'bnb-mainnet',
-    [SUPPORTED_CHAINS.ARBITRUM]: 'arb-mainnet',
-    [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
-    [SUPPORTED_CHAINS.OPTIMISM]: 'opt-mainnet',
-  }
-
-  const chainName = chainNames[chainId]
-  if (!chainName) return null
-
-  return `https://${chainName}.g.alchemy.com/v2/${key}`
-}
-
-/**
- * Get Alchemy Data API URL (for JSON-RPC)
- */
-export const getAlchemyDataApiUrl = (chainId: number, apiKey?: string): string | null => {
-  const key = apiKey || getAlchemyApiKey()
-  if (!key) return null
-
-  const chainNames: Record<number, string> = {
-    [SUPPORTED_CHAINS.ETHEREUM]: 'eth-mainnet',
-    [SUPPORTED_CHAINS.POLYGON]: 'polygon-mainnet',
-    [SUPPORTED_CHAINS.BSC]: 'bnb-mainnet',
-    [SUPPORTED_CHAINS.ARBITRUM]: 'arb-mainnet',
-    [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
-    [SUPPORTED_CHAINS.OPTIMISM]: 'opt-mainnet',
-    [SUPPORTED_CHAINS.MONAD]: 'monad-mainnet',
-  }
-
-  const chainName = chainNames[chainId]
-  if (!chainName) return null
-
-  return `https://${chainName}.g.alchemy.com/v2/${key}`
-}
-
-/**
- * Get Alchemy Assets API network name
- */
-export const getAlchemyNetworkName = (chainId: number): string | null => {
-  const networkNames: Record<number, string> = {
-    [SUPPORTED_CHAINS.ETHEREUM]: 'eth-mainnet',
-    [SUPPORTED_CHAINS.POLYGON]: 'polygon-mainnet',
-    [SUPPORTED_CHAINS.BSC]: 'bnb-mainnet',
-    [SUPPORTED_CHAINS.ARBITRUM]: 'arb-mainnet',
-    [SUPPORTED_CHAINS.BASE]: 'base-mainnet',
-    [SUPPORTED_CHAINS.OPTIMISM]: 'opt-mainnet',
-    [SUPPORTED_CHAINS.MONAD]: 'monad-mainnet',
-  }
-
-  const networkName = networkNames[chainId]
-  if (!networkName) return null
-
-  return networkName
-}
 
 /**
  * Get Infura API key (client-side)
@@ -314,7 +209,7 @@ export const getInfuraApiKey = (): string | null => {
 
 /**
  * Get Infura RPC URL for a chain
- * Priority: Infura > Alchemy > Default public RPC
+ * Priority: Infura > Default public RPC
  */
 export const getInfuraRpcUrl = (chainId: number, apiKey?: string): string | null => {
   const key = apiKey || (typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_INFURA_API_KEY : null)

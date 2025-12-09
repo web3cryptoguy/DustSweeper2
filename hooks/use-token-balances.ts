@@ -39,7 +39,7 @@ const getCache = <T,>(key: string): { data: T; timestamp: number } | null => {
     
     return parsed
   } catch (error) {
-    console.warn('读取缓存失败:', error)
+    console.warn('Failed to read cache:', error)
     return null
   }
 }
@@ -53,7 +53,7 @@ const setCache = <T,>(key: string, data: T) => {
     }
     localStorage.setItem(key, JSON.stringify(cacheData))
   } catch (error) {
-    console.warn('设置缓存失败:', error)
+    console.warn('Failed to set cache:', error)
     // 如果存储空间不足，尝试清理旧缓存（参照参考项目）
     try {
       const keys = Object.keys(localStorage)
@@ -63,7 +63,7 @@ const setCache = <T,>(key: string, data: T) => {
       // 重试
       localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }))
     } catch (retryError) {
-      console.error('缓存清理后仍无法存储:', retryError)
+      console.error('Failed to store cache after cleanup:', retryError)
     }
   }
 }
@@ -75,7 +75,7 @@ export const invalidateTokenBalanceCache = () => {
     const cacheKeys = keys.filter(k => k.startsWith(CACHE_PREFIX))
     cacheKeys.forEach(k => localStorage.removeItem(k))
   } catch (error) {
-    console.warn('清除缓存失败:', error)
+    console.warn('Failed to clear cache:', error)
   }
 }
 
@@ -88,7 +88,7 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
   const [isInitialized, setIsInitialized] = useState(false)
   const cacheAppliedRef = useRef(false)
   
-  const { isTokenVerified, loading: verifiedLoading, apiStatus: verifiedApiStatus, isReady: verificationReady } = useVerifiedTokens(chainId)
+  const { isTokenVerified, loading: verifiedLoading, apiStatus: verifiedApiStatus, isReady: verificationReady, refetch: refetchVerified } = useVerifiedTokens(chainId)
   const prevAddressRef = useRef<string | undefined>(address)
 
   const cacheKey = useMemo(() => address && chainId ? getCacheKey(address, chainId) : '', [address, chainId])
@@ -107,7 +107,6 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
     // 立即检查缓存
     const cached = getCache<Token[]>(cacheKey)
     if (cached !== null) {
-      console.log('初始化时使用缓存数据')
       setTokens(cached.data)
       setApiStatus('working')
       setLoading(false)
@@ -134,8 +133,19 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
     if (!address) return
     
     // Wait for verified tokens to be ready before filtering
-    if (!verificationReady) {
-      return
+    // 但如果验证加载时间过长，仍然继续执行（使用空验证列表）
+    if (!verificationReady && verifiedLoading) {
+      // 验证还在加载中，等待最多 2 秒
+      const maxWaitTime = 2000
+      const checkInterval = 100
+      let waited = 0
+      
+      while (!verificationReady && verifiedLoading && waited < maxWaitTime) {
+        await new Promise(resolve => setTimeout(resolve, checkInterval))
+        waited += checkInterval
+      }
+      
+      // 如果超时仍未就绪，继续执行（验证列表为空，所有代币都会通过验证检查）
     }
 
     // 只有在没有缓存或需要刷新时才设置 loading 和调用 API
@@ -455,14 +465,19 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
     }
   }, [address, chainId, isTokenVerified, verificationReady, cacheKey])
 
-  // 只有在初始化完成且验证就绪时才获取数据
+  // 当 address 或 chainId 变化时，立即触发数据获取
   useEffect(() => {
-    if (!isInitialized || !verificationReady || !address) {
+    if (!address || !chainId) {
       return
     }
     
     // 如果已经应用了缓存，不需要再次调用 API
     if (cacheAppliedRef.current) {
+      return
+    }
+    
+    // 如果初始化未完成，等待初始化
+    if (!isInitialized) {
       return
     }
     
@@ -479,9 +494,10 @@ export function useTokenBalances(address: string | undefined, chainId: Supported
       return
     }
     
-    // 只有在没有缓存时才调用 API
+    // 立即调用 API，不等待验证就绪
+    // fetchTokens 内部会处理验证等待逻辑（最多等待 2 秒）
     fetchTokens()
-  }, [fetchTokens, isInitialized, verificationReady, cacheKey, address, tokens.length])
+  }, [fetchTokens, isInitialized, cacheKey, address, chainId, tokens.length])
 
   return {
     tokens,

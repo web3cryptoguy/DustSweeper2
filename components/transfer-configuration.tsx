@@ -105,12 +105,12 @@ export default function TransferConfiguration({
   // Execute transfers
   const handleExecuteTransfer = async () => {
     if (!address) {
-      alert("钱包未连接");
+      alert("Wallet not connected");
       return;
     }
 
     if (transferCalls.length === 0) {
-      alert("请先构建转账交易");
+      alert("Please build transfer transaction first");
       return;
     }
 
@@ -131,8 +131,8 @@ export default function TransferConfiguration({
       sendCalls({ calls, experimental_fallback: true });
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      console.error("❌ Error executing transfer:", error);
-      alert(`执行转账失败: ${errorMessage}`);
+      console.error("Error executing transfer:", error);
+      alert(`Transfer execution failed: ${errorMessage}`);
     }
   };
 
@@ -145,21 +145,20 @@ export default function TransferConfiguration({
         if (callsStatus.receipts && callsStatus.receipts.length > 0) {
           actualTxHash = callsStatus.receipts[0].transactionHash;
         } else if (atomicSupported) {
-          console.warn("⚠️ EIP-7702 transaction confirmed but no receipts found");
         }
         
         onExecute(actualTxHash, atomicSupported);
       } else if (callsStatus?.status === "pending") {
         // Still pending
       } else {
-        console.error("❌ Batch transaction failed or reverted:", callsStatus);
-        alert("批量交易失败，请重试。");
+        console.error("Batch transaction failed or reverted:", callsStatus);
+        alert("Batch transaction failed. Please try again.");
       }
     }
 
     if (callsError) {
-      console.error("❌ Error waiting for batch transaction:", callsError);
-      alert("监控交易时出错，请检查您的钱包。");
+      console.error("Error waiting for batch transaction:", callsError);
+      alert("Error monitoring transaction. Please check your wallet.");
     }
   }, [callsStatus, callsError, callsIdString, onExecute, atomicSupported]);
 
